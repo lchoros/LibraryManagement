@@ -1,9 +1,11 @@
 using LibraryManagement.API.Profiles;
+using LibraryManagement.API.Settings;
 using LibraryManagement.Data.DbContexts;
 using LibraryManagement.Data.Initialization;
 using LibraryManagement.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
 
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 var app = builder.Build();
 using var scope = app.Services.CreateScope();
 var dbInitializer = scope.ServiceProvider.GetRequiredService<ApplicationDbInitializer>();
