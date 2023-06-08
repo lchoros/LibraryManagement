@@ -1,5 +1,5 @@
 using LibraryManagement.API.Profiles;
-using LibraryManagement.API.Settings;
+using LibraryManagement.Core.Settings;
 using LibraryManagement.Data.DbContexts;
 using LibraryManagement.Data.Initialization;
 using LibraryManagement.Data.Models;
@@ -26,6 +26,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 var app = builder.Build();
 using var scope = app.Services.CreateScope();
 var dbInitializer = scope.ServiceProvider.GetRequiredService<ApplicationDbInitializer>();

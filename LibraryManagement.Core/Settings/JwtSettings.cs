@@ -1,4 +1,4 @@
-﻿namespace LibraryManagement.API.Settings
+﻿namespace LibraryManagement.Core.Settings
 {
     public class JwtSettings
     {

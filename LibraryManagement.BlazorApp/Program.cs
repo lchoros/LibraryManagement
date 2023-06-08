@@ -1,6 +1,6 @@
 using LibraryManagement.BlazorApp.Data;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using LibraryManagement.BlazorApp.Services.Interfaces;
+using LibraryManagement.BlazorApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-
+builder.Services.AddHttpClient("apiClient", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseURL"]);
+});
+builder.Services.AddScoped<IAuthService, AuthService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

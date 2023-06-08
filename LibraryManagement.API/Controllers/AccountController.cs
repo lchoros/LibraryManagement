@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using LibraryManagement.API.Settings;
 using LibraryManagement.Core.DTOs;
+using LibraryManagement.Core.Settings;
 using LibraryManagement.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ using System.Text;
 
 namespace LibraryManagement.API.Controllers
 {
-    [Route("api/[controller")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -45,9 +45,22 @@ namespace LibraryManagement.API.Controllers
 
                 var result = await _userManager.CreateAsync(user, registerDto.Password);
 
-                // Rest of your code...
-            }
+                if (!result.Succeeded)
+                {
+                    return BadRequest(new { errors = result.Errors });
+                }
 
+                // Assign the role
+                await _userManager.AddToRoleAsync(user, "Standard");
+
+                // Generate email confirmation token
+                var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                // Send the email to user. You could use services like SendGrid or other SMTP service
+
+                // For simplicity, just return the token for manual confirmation
+                return Ok(new { token = emailConfirmationToken, email = user.Email });
+            }
             return BadRequest(new { message = "Invalid data" });
         }
 
